@@ -2285,12 +2285,19 @@ tgl.addEventListener('click',function(){
  tgl.textContent=anyOpen?'Expand all':'Collapse all';
 });
 function expand(id){var dk=document.getElementById(id);if(dk)dk.classList.remove('closed');return dk}
-window.addEventListener('hashchange',function(){expand(location.hash.slice(1))});
-if(location.hash)expand(location.hash.slice(1));
+/* Deep links (shared #deck URLs) open their deck once, then the hash is stripped so a
+   refresh always starts clean at the top. Normal navigation never writes the hash. */
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+window.addEventListener('hashchange',function(){var dk=expand(location.hash.slice(1));if(dk)dk.scrollIntoView()});
+if(location.hash){
+ var dk0=expand(location.hash.slice(1));
+ if(dk0)setTimeout(function(){dk0.scrollIntoView()},0);
+ history.replaceState(null,'',location.pathname+location.search);
+}
 $('#jump').addEventListener('change',function(){
  if(!this.value)return;
  var dk=expand(this.value);
- if(dk){if('#'+this.value!==location.hash)location.hash=this.value;dk.scrollIntoView()}
+ if(dk)dk.scrollIntoView();
  this.selectedIndex=0;
 });
 
@@ -2408,7 +2415,7 @@ document.addEventListener('click',function(e){
  var il=e.target.closest&&e.target.closest('.index a');
  if(il&&il.dataset.t){
   var dk=expand(il.dataset.t);
-  if(dk){if('#'+il.dataset.t!==location.hash)location.hash=il.dataset.t;dk.scrollIntoView()}
+  if(dk)dk.scrollIntoView();
   return}
  if(e.target.closest&&e.target.closest('#totop')){window.scrollTo(0,0);return}
  var b=e.target.closest&&e.target.closest('button');
@@ -2416,10 +2423,8 @@ document.addEventListener('click',function(e){
   if(b.classList.contains('b-list')){$('.dlist',b.closest('.deck')).classList.toggle('show');return}
   if(b.classList.contains('b-copy')){copyText($('.dlist',b.closest('.deck')).textContent,b);return}
   if(b.classList.contains('b-link')){
-   var id=b.dataset.id;
-   if('#'+id!==location.hash)location.hash=id;
    var base=location.href.split('#')[0];
-   copyText(base+'#'+id,b);return}
+   copyText(base+'#'+b.dataset.id,b);return}
  }
  var h=e.target.closest&&e.target.closest('.dhead');
  if(h){h.parentNode.classList.toggle('closed');return}
