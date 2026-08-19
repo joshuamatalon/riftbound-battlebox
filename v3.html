@@ -1,0 +1,277 @@
+<!doctype html><html lang="en"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#12151c">
+<title>Riftbound V3 Build Sheet</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--display:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif;
+ --ui:-apple-system,'Segoe UI',Roboto,sans-serif;--gold:#c9a24a;--ink:#101219;
+ --green:#2e8b57;--red:#c0392b;--grey:#3a4054}
+body{font-family:var(--ui);background:var(--ink);color:#e8e6e0;line-height:1.5;
+ padding-bottom:60px;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:900px;margin:0 auto;padding:12px}
+.masthead{padding:22px 4px 16px;position:relative}
+.masthead:after{content:'';position:absolute;left:4px;right:4px;bottom:0;height:1px;
+ background:linear-gradient(90deg,var(--gold),#c9a24a55 22%,#2a3040 60%,transparent)}
+.overline{color:var(--gold);font-size:11px;font-weight:600;letter-spacing:.38em;text-transform:uppercase}
+h1{font-family:var(--display);font-size:32px;font-weight:600;line-height:1.1;padding:4px 0 8px}
+.sub{color:#9aa2b1;font-size:13px}
+h2{font-family:var(--display);font-size:22px;margin:28px 0 10px;padding-top:14px;border-top:1px solid #232a3d}
+h3{font-size:16px;font-weight:700}
+#printbtn{position:fixed;right:14px;bottom:14px;z-index:50;background:var(--gold);color:#141005;
+ border:none;border-radius:999px;padding:12px 18px;font-weight:700;font-size:14px;cursor:pointer;
+ box-shadow:0 4px 14px rgba(0,0,0,.4)}
+/* checklist */
+ol.checklist{list-style:none;counter-reset:step;display:flex;flex-direction:column;gap:10px}
+ol.checklist li{counter-increment:step;background:#181c27;border:1px solid #262c3d;border-radius:10px;
+ padding:10px 12px}
+ol.checklist label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-size:14px}
+ol.checklist label:before{content:counter(step);flex:none;width:22px;height:22px;border-radius:50%;
+ background:var(--gold);color:#141005;font-weight:800;font-size:12px;display:flex;align-items:center;
+ justify-content:center}
+ol.checklist input{flex:none;width:18px;height:18px;margin-top:1px;accent-color:var(--gold)}
+/* deck sections */
+.deck{background:#181c27;border:1px solid #262c3d;border-radius:14px;padding:14px;margin-bottom:16px;
+ page-break-inside:avoid}
+.dhead{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.dnum{flex:none;width:26px;height:26px;border-radius:50%;background:#2a3247;color:#c8cede;
+ font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.dtitle{flex:1;min-width:0}
+.dsub{color:#9aa2b1;font-size:12px}
+.dbadge{flex:none;font-size:11px;font-weight:800;letter-spacing:.06em;padding:4px 9px;border-radius:999px;
+ text-transform:uppercase;white-space:nowrap}
+.dbadge.retool{background:#2471a3;color:#fff}
+.dbadge.optional{background:#7d3c98;color:#fff}
+.why,.note{font-size:13px;color:#c8cede;margin:6px 0 10px}
+.note{color:#9aa2b1;font-style:italic}
+.hold{background:#3a2a10;border:1px solid #8a5a1a;color:#f0c878;border-radius:8px;padding:8px 10px;
+ font-size:12.5px;font-weight:600;margin-bottom:10px}
+.rowlabel{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin:8px 0 6px}
+.rowlabel.add{color:#5fce8d}
+.rowlabel.cut{color:#e8705f}
+.tiles{display:flex;flex-wrap:wrap;gap:8px}
+.tile{width:92px;flex:none;border-radius:8px;overflow:hidden;border:2px solid #262c3d;background:#12151c}
+.tile.add{border-color:var(--green)}
+.tile.cut{border-color:#5a3030;opacity:.7}
+.tile.cut img{filter:grayscale(.7)}
+.art{position:relative;aspect-ratio:1/1;background:#1c2130}
+.art img{width:100%;height:100%;object-fit:cover;display:block}
+.tile .noart{width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+ font-size:.6em;text-align:center;padding:6px;color:#8b93a6}
+.delta{position:absolute;top:3px;left:3px;font-size:12px;font-weight:800;padding:1px 6px;border-radius:6px;
+ color:#fff}
+.delta.add{background:var(--green)}
+.delta.cut{background:var(--red)}
+.tname{font-size:10px;padding:4px 5px 0;line-height:1.2;min-height:2.2em}
+.setcode{font-size:9px;color:#8b93a6;padding:1px 5px}
+.badge{font-size:9px;font-weight:800;text-align:center;padding:2px 0;letter-spacing:.04em}
+.badge.owned{background:#2a3247;color:#9aa2b1}
+.badge.pull{background:#8a5a1a;color:#fff}
+/* decision cards */
+.decision{background:#201a10;border:1px solid #4a3a1a;border-radius:14px;padding:16px;margin-bottom:16px}
+.decision h3{color:var(--gold)}
+.decision p{font-size:13.5px;color:#d8d2c4;margin:8px 0}
+.decision ul.opts{margin:8px 0 8px 18px;font-size:13px;color:#c8cede}
+.decision ul.opts li{margin-bottom:6px}
+.nodefault{font-size:11px;color:#a08a5a;font-style:italic;border-top:1px solid #4a3a1a;padding-top:8px}
+/* keep list */
+ul.keep{list-style:none;display:flex;flex-direction:column;gap:4px;font-size:14px}
+ul.keep li{background:#181c27;border-radius:8px;padding:8px 10px}
+.klegend{color:#8b93a6;font-size:12px}
+.footnotes{font-size:11px;color:#8b93a6;margin-top:10px;line-height:1.6}
+footer{color:#6a7286;font-size:11px;text-align:center;margin-top:30px}
+@media print{
+ body{background:#fff;color:#111;padding-bottom:0}
+ #printbtn{display:none}
+ .deck,.decision,ul.keep li{background:#fff;border:1px solid #999}
+ .why,.note,.decision p,.klegend{color:#333}
+ .tile{border-color:#999}
+ .tile.cut{opacity:.85}
+ .hold{background:#fff3d6;color:#7a4d00;border-color:#c99}
+ a{color:inherit;text-decoration:none}
+}
+</style>
+<div class="wrap">
+<div class="masthead">
+ <div class="overline">Riftbound Battle Box &middot; 2026-08-19</div>
+ <h1>V3 Build Sheet</h1>
+ <div class="sub">The order to physically resleeve the box. Green = add, red/grey = cut.
+ [pull?] SFD tiles need the Spiritforged box scan first &mdash; hold those swaps.</div>
+</div>
+
+<h2>Migration checklist</h2>
+<ol class="checklist"><li><label><input type="checkbox"><span>Azir module resleeve (Hand Hammer ×2 / Soul Sword ×1 / Azir, Ascendant ×1 in; Shen ×2 / Flurry of Feathers ×1 / Twilight Shroud ×1 out) — zero cost, answers Josh's named complaint directly, do first, no dependencies.</span></label></li><li><label><input type="checkbox"><span>Apply the 8 RETOOL decks' <b>owned-only</b> swaps (Maximum Force's Daring Poro ×3 is the one fully owned, no-pull RETOOL — do it now). Hold every [pull?]-flagged swap until step 4.</span></label></li><li><label><input type="checkbox"><span>Decide and apply a Firestorm fallback for the Draven module (see decision card below) — Josh's call.</span></label></li><li><label><input type="checkbox"><span><b>Scan the Spiritforged box.</b> This is the actual unlock for every [pull?] swap above.</span></label></li><li><label><input type="checkbox"><span>Apply the SFD-dependent [pull?] swaps once the scan confirms the pulls are real.</span></label></li><li><label><input type="checkbox"><span>Confirm the VEN box count before relying on it to cover the Tornado Warrior gap (see decision card below); if it doesn't check out, apply the same kind of targeted fallback used for Firestorm.</span></label></li><li><label><input type="checkbox"><span>Follow-up session (out of this page's scope): the four inherited charter-floor debts and the still-unsolved War Council displacement gap — both require editing decks this pass verified as identity-correct, deliberately deferred, not forgotten.</span></label></li><li><label><input type="checkbox"><span><b>Optional, whenever Josh feels like it, no dependency on anything above:</b> Voidreaver's Spiderling/Nidalee preference swap — both configurations are legal and owned.</span></label></li></ol>
+
+<h2>Changing decks</h2>
+
+<section class="deck" id="deck-1">
+  <div class="dhead">
+    <span class="dnum">1</span>
+    <div class="dtitle">
+      <h3>THE WORKSHOP</h3>
+      <div class="dsub">Jayce, Defender of Tomorrow · TABLE · Gear accumulation + Mech tokens: an engine, not a beatdown</div>
+    </div>
+    <span class="dbadge retool">RETOOL</span>
+  </div>
+  <p class="why">RETOOL: +Bubble Bot/Breakneck Mech (SFD, real Mech-tribal fit, [pull?]) for Eclipse/Acceleration Gate/Hextech Formula filler.</p>
+  <div class="hold">⚠ Contains Spiritforged box-pull cards — <b>hold this swap until the SFD scan</b> (checklist step 4).</div>
+  <div class="rowlabel add">ADD (2)</div><div class="tiles"><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/666429_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/666429_in_400x400.jpg" alt="Bubble Bot"></span><span class="delta add">+2</span></div><div class="tname">Bubble Bot</div><div class="setcode">SFD</div><div class="badge pull">[pull?] SFD</div></div><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/666434_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/666434_in_400x400.jpg" alt="Breakneck Mech"></span><span class="delta add">+1</span></div><div class="tname">Breakneck Mech</div><div class="setcode">SFD</div><div class="badge pull">[pull?] SFD</div></div></div>
+  <div class="rowlabel cut">CUT (3)</div><div class="tiles"><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/706037_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/706037_in_400x400.jpg" alt="Hextech Formula"></span><span class="delta cut">−1</span></div><div class="tname">Hextech Formula</div><div class="setcode">VEN</div><div class="badge owned">OWNED</div></div><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/685679_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/685679_in_400x400.jpg" alt="Eclipse"></span><span class="delta cut">−1</span></div><div class="tname">Eclipse</div><div class="setcode">UNL</div><div class="badge owned">OWNED</div></div><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/707605_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/707605_in_400x400.jpg" alt="Acceleration Gate"></span><span class="delta cut">−1</span></div><div class="tname">Acceleration Gate</div><div class="setcode">VEN</div><div class="badge owned">OWNED</div></div></div>
+</section>
+
+<section class="deck" id="deck-2">
+  <div class="dhead">
+    <span class="dnum">2</span>
+    <div class="dtitle">
+      <h3>THE FINAL SPARK</h3>
+      <div class="dsub">Lux, Lady of Luminosity · CORE · 5+-cost spell payoffs + ready Sprite constructs as the board</div>
+    </div>
+    <span class="dbadge retool">RETOOL</span>
+  </div>
+  <p class="why">RETOOL: +Drag Under (SFD, 5-cost spell, direct numeric fit, [pull?]) for 1 filler slot -- first SFD card in this deck.</p>
+  <div class="hold">⚠ Contains Spiritforged box-pull cards — <b>hold this swap until the SFD scan</b> (checklist step 4).</div>
+  <div class="rowlabel add">ADD (1)</div><div class="tiles"><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/666497_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/666497_in_400x400.jpg" alt="Drag Under"></span><span class="delta add">+1</span></div><div class="tname">Drag Under</div><div class="setcode">SFD</div><div class="badge pull">[pull?] SFD</div></div></div>
+  <div class="rowlabel cut">CUT (1)</div><div class="tiles"><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/684201_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/684201_in_400x400.jpg" alt="Downstage Dramatics"></span><span class="delta cut">−1</span></div><div class="tname">Downstage Dramatics</div><div class="setcode">OPP</div><div class="badge owned">OWNED</div></div></div>
+</section>
+
+<section class="deck" id="deck-3">
+  <div class="dhead">
+    <span class="dnum">3</span>
+    <div class="dtitle">
+      <h3>MAXIMUM FORCE</h3>
+      <div class="dsub">Vi, Piltover Enforcer · CORE · Assault + ready-attack loops + excess-damage payoffs</div>
+    </div>
+    <span class="dbadge retool">RETOOL</span>
+  </div>
+  <p class="why">RETOOL: +Daring Poro x3 (OWNED, OPP, direct [Assault] fit, real slack) for Upstage Comedy/Twilight Reveler filler.</p>
+  
+  <div class="rowlabel add">ADD (1)</div><div class="tiles"><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/653003_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/653003_in_400x400.jpg" alt="Daring Poro"></span><span class="delta add">+3</span></div><div class="tname">Daring Poro</div><div class="setcode">OPP</div><div class="badge owned">OWNED</div></div></div>
+  <div class="rowlabel cut">CUT (2)</div><div class="tiles"><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/707698_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/707698_in_400x400.jpg" alt="Twilight Reveler"></span><span class="delta cut">−1</span></div><div class="tname">Twilight Reveler</div><div class="setcode">VEN</div><div class="badge owned">OWNED</div></div><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/684487_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/684487_in_400x400.jpg" alt="Upstage Comedy"></span><span class="delta cut">−2</span></div><div class="tname">Upstage Comedy</div><div class="setcode">OPP</div><div class="badge owned">OWNED</div></div></div>
+</section>
+
+<section class="deck" id="deck-4">
+  <div class="dhead">
+    <span class="dnum">4</span>
+    <div class="dtitle">
+      <h3>THE ROGUE ASSASSIN</h3>
+      <div class="dsub">Akali, Rogue Assassin · CORE · Hit-and-run duelists + the legend&#x27;s mid-fight extraction</div>
+    </div>
+    <span class="dbadge retool">RETOOL</span>
+  </div>
+  <p class="why">RETOOL: +Blood Rush/Thwonk!/Emperor&#x27;s Divide (SFD showdown-duel fits, [pull?]) for redundant VEN filler; the box&#x27;s most VEN-siloed deck (88%).</p>
+  <div class="hold">⚠ Contains Spiritforged box-pull cards — <b>hold this swap until the SFD scan</b> (checklist step 4).</div>
+  <div class="rowlabel add">ADD (3)</div><div class="tiles"><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/666792_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/666792_in_400x400.jpg" alt="Blood Rush"></span><span class="delta add">+2</span></div><div class="tname">Blood Rush</div><div class="setcode">SFD</div><div class="badge pull">[pull?] SFD</div></div><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/666369_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/666369_in_400x400.jpg" alt="Thwonk!"></span><span class="delta add">+2</span></div><div class="tname">Thwonk!</div><div class="setcode">SFD</div><div class="badge pull">[pull?] SFD</div></div><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/666839_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/666839_in_400x400.jpg" alt="Emperor&#x27;s Divide"></span><span class="delta add">+1</span></div><div class="tname">Emperor&#x27;s Divide</div><div class="setcode">SFD</div><div class="badge pull">[pull?] SFD</div></div></div>
+  <div class="rowlabel cut">CUT (3)</div><div class="tiles"><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/706069_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/706069_in_400x400.jpg" alt="Mournful Witness"></span><span class="delta cut">−2</span></div><div class="tname">Mournful Witness</div><div class="setcode">VEN</div><div class="badge owned">OWNED</div></div><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/706004_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/706004_in_400x400.jpg" alt="Baccai Reaper"></span><span class="delta cut">−2</span></div><div class="tname">Baccai Reaper</div><div class="setcode">VEN</div><div class="badge owned">OWNED</div></div><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/707621_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/707621_in_400x400.jpg" alt="Crumbling Sands"></span><span class="delta cut">−1</span></div><div class="tname">Crumbling Sands</div><div class="setcode">VEN</div><div class="badge owned">OWNED</div></div></div>
+</section>
+
+<section class="deck" id="deck-5">
+  <div class="dhead">
+    <span class="dnum">5</span>
+    <div class="dtitle">
+      <h3>BLOODHARBOR</h3>
+      <div class="dsub">Pyke, Bloodharbor Ripper · CORE · Hidden threats + Spiderling swarm + bounce-for-Gold economy</div>
+    </div>
+    <span class="dbadge retool">RETOOL</span>
+  </div>
+  <p class="why">RETOOL: +Bushwhack/Black Market Broker/Sudden Storm (SFD Hidden+Gold, [pull?]) for excess Spiderling/Sneaky Deckhand copies.</p>
+  <div class="hold">⚠ Contains Spiritforged box-pull cards — <b>hold this swap until the SFD scan</b> (checklist step 4).</div>
+  <div class="rowlabel add">ADD (3)</div><div class="tiles"><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/666793_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/666793_in_400x400.jpg" alt="Bushwhack"></span><span class="delta add">+2</span></div><div class="tname">Bushwhack</div><div class="setcode">SFD</div><div class="badge pull">[pull?] SFD</div></div><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/666819_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/666819_in_400x400.jpg" alt="Black Market Broker"></span><span class="delta add">+2</span></div><div class="tname">Black Market Broker</div><div class="setcode">SFD</div><div class="badge pull">[pull?] SFD</div></div><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/666809_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/666809_in_400x400.jpg" alt="Sudden Storm"></span><span class="delta add">+1</span></div><div class="tname">Sudden Storm</div><div class="setcode">SFD</div><div class="badge pull">[pull?] SFD</div></div></div>
+  <div class="rowlabel cut">CUT (2)</div><div class="tiles"><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/707691_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/707691_in_400x400.jpg" alt="Spiderling"></span><span class="delta cut">−3</span></div><div class="tname">Spiderling</div><div class="setcode">VEN</div><div class="badge owned">OWNED</div></div><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/652965_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/652965_in_400x400.jpg" alt="Sneaky Deckhand"></span><span class="delta cut">−2</span></div><div class="tname">Sneaky Deckhand</div><div class="setcode">OGN</div><div class="badge owned">OWNED</div></div></div>
+</section>
+
+<section class="deck" id="deck-6">
+  <div class="dhead">
+    <span class="dnum">6</span>
+    <div class="dtitle">
+      <h3>THE MIRRORED ROSE</h3>
+      <div class="dsub">LeBlanc, Deceiver · TABLE · Reflection copies on scores + everything-dies-forward Deathknell value</div>
+    </div>
+    <span class="dbadge retool">RETOOL</span>
+  </div>
+  <p class="why">RETOOL: +Honest Broker/Glasc Mixologist (SFD Deathknell-value, direct fit, [pull?]) for weak 1-of filler.</p>
+  <div class="hold">⚠ Contains Spiritforged box-pull cards — <b>hold this swap until the SFD scan</b> (checklist step 4).</div>
+  <div class="rowlabel add">ADD (2)</div><div class="tiles"><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/664946_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/664946_in_400x400.jpg" alt="Honest Broker"></span><span class="delta add">+2</span></div><div class="tname">Honest Broker</div><div class="setcode">SFD</div><div class="badge pull">[pull?] SFD</div></div><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/666495_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/666495_in_400x400.jpg" alt="Glasc Mixologist"></span><span class="delta add">+1</span></div><div class="tname">Glasc Mixologist</div><div class="setcode">SFD</div><div class="badge pull">[pull?] SFD</div></div></div>
+  <div class="rowlabel cut">CUT (3)</div><div class="tiles"><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/685682_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/685682_in_400x400.jpg" alt="Black Rose Dignitary"></span><span class="delta cut">−1</span></div><div class="tname">Black Rose Dignitary</div><div class="setcode">UNL</div><div class="badge owned">OWNED</div></div><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/685654_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/685654_in_400x400.jpg" alt="Fate Weaver"></span><span class="delta cut">−1</span></div><div class="tname">Fate Weaver</div><div class="setcode">UNL</div><div class="badge owned">OWNED</div></div><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/685253_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/685253_in_400x400.jpg" alt="Shadow&#x27;s Call"></span><span class="delta cut">−1</span></div><div class="tname">Shadow&#x27;s Call</div><div class="setcode">UNL</div><div class="badge owned">OWNED</div></div></div>
+</section>
+
+<section class="deck" id="deck-7">
+  <div class="dhead">
+    <span class="dnum">7</span>
+    <div class="dtitle">
+      <h3>THE VOIDREAVER</h3>
+      <div class="dsub">Kha&#x27;Zix, Voidreaver · not a required migration step</div>
+    </div>
+    <span class="dbadge optional">OPTIONAL — preference</span>
+  </div>
+  <p class="why">Legality premise RETRACTED. Spiderling&#x27;s own printed text reads “Your deck can have any number of cards named Spiderling” — it exempts itself from the 3-copy cap, so V2.3&#x27;s Voidreaver Spiderling ×4 was legal all along (10 owned, 10 demanded — no ownership problem either). The −1 Spiderling / +1 Nidalee, Cat Form swap is a modest isolation-hunt-lever preference (Nidalee: OWNED, real slack=1, Body-domain, [Ambush] + win-combat-draw), not a rules fix. Both configurations are legal and owned — this is Josh&#x27;s call, take it or leave it.</p>
+  
+  <div class="rowlabel add">ADD (1)</div><div class="tiles"><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/684207_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/684207_in_400x400.jpg" alt="Nidalee, Cat Form"></span><span class="delta add">+1</span></div><div class="tname">Nidalee, Cat Form</div><div class="setcode">UNL</div><div class="badge owned">OWNED</div></div></div>
+  <div class="rowlabel cut">CUT (1)</div><div class="tiles"><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/707691_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/707691_in_400x400.jpg" alt="Spiderling"></span><span class="delta cut">−1</span></div><div class="tname">Spiderling</div><div class="setcode">VEN</div><div class="badge owned">OWNED</div></div></div>
+</section>
+
+<section class="deck" id="deck-8">
+  <div class="dhead">
+    <span class="dnum">8</span>
+    <div class="dtitle">
+      <h3>THE VIRTUOSO</h3>
+      <div class="dsub">Jhin, Virtuoso · CORE · 4+-cost spells banished to the legend; the fourth fires a mass rune payoff</div>
+    </div>
+    <span class="dbadge retool">RETOOL</span>
+  </div>
+  <p class="why">RETOOL: +Rocket Barrage (SFD, 4-cost spell, direct numeric fit, [pull?]) for 1 filler slot.</p>
+  <div class="hold">⚠ Contains Spiritforged box-pull cards — <b>hold this swap until the SFD scan</b> (checklist step 4).</div>
+  <div class="rowlabel add">ADD (2)</div><div class="tiles"><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/666506_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/666506_in_400x400.jpg" alt="Rocket Barrage"></span><span class="delta add">+1</span></div><div class="tname">Rocket Barrage</div><div class="setcode">SFD</div><div class="badge pull">[pull?] SFD</div></div><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/685933_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/685933_in_400x400.jpg" alt="Sprite Burst"></span><span class="delta add">+1</span></div><div class="tname">Sprite Burst</div><div class="setcode">UNL</div><div class="badge owned">OWNED</div></div></div>
+  <div class="rowlabel cut">CUT (2)</div><div class="tiles"><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/652874_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/652874_in_400x400.jpg" alt="Smoke Screen"></span><span class="delta cut">−1</span></div><div class="tname">Smoke Screen</div><div class="setcode">OGN</div><div class="badge owned">OWNED</div></div><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/707638_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/707638_in_400x400.jpg" alt="Forsaken Baccai"></span><span class="delta cut">−1</span></div><div class="tname">Forsaken Baccai</div><div class="setcode">VEN</div><div class="badge owned">OWNED</div></div></div>
+</section>
+
+<section class="deck" id="deck-9">
+  <div class="dhead">
+    <span class="dnum">9</span>
+    <div class="dtitle">
+      <h3>THE TWILIGHT WATCH — Azir module</h3>
+      <div class="dsub">Shen, Eye of Twilight → Azir, Emperor of the Sands · optional module resleeve</div>
+    </div>
+    <span class="dbadge optional">OPTIONAL MODULE</span>
+  </div>
+  <p class="note">Base 40 is <b>unchanged</b> — Twilight Watch stays a KEEP deck (see the list
+  below). This section is only for swapping the champion from Shen to Azir.</p>
+  <p class="why">REBUILT from V2.3&#x27;s non-functional version (its adds were Desert&#x27;s Call, which is not Equipment -- Azir&#x27;s token-maker never fired). Now adds 3 Equipment copies (Hand Hammer x2 VEN OWNED slack=7, Soul Sword x1 UNL OWNED slack=2), satisfying enabler_check and making the Sand Soldier half of Azir&#x27;s ability live for the first time.</p>
+  
+  <div class="rowlabel add">ADD (3)</div><div class="tiles"><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/666398_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/666398_in_400x400.jpg" alt="Azir, Ascendant"></span><span class="delta add">+1</span></div><div class="tname">Azir, Ascendant</div><div class="setcode">SFD</div><div class="badge owned">OWNED</div></div><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/707643_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/707643_in_400x400.jpg" alt="Hand Hammer"></span><span class="delta add">+2</span></div><div class="tname">Hand Hammer</div><div class="setcode">VEN</div><div class="badge owned">OWNED</div></div><div class="tile add"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/685197_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/685197_in_400x400.jpg" alt="Soul Sword"></span><span class="delta add">+1</span></div><div class="tname">Soul Sword</div><div class="setcode">UNL</div><div class="badge owned">OWNED</div></div></div>
+  <div class="rowlabel cut">CUT (3)</div><div class="tiles"><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/706106_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/706106_in_400x400.jpg" alt="Shen, Scourge of Shadows"></span><span class="delta cut">−2</span></div><div class="tname">Shen, Scourge of Shadows</div><div class="setcode">VEN</div><div class="badge owned">OWNED</div></div><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/686272_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/686272_in_400x400.jpg" alt="Flurry of Feathers"></span><span class="delta cut">−1</span></div><div class="tname">Flurry of Feathers</div><div class="setcode">UNL</div><div class="badge owned">OWNED</div></div><div class="tile cut"><div class="art"><span class="zoom" data-big="https://tcgplayer-cdn.tcgplayer.com/product/706117_in_1000x1000.jpg"><img loading="lazy" decoding="async" width="300" height="300" src="https://tcgplayer-cdn.tcgplayer.com/product/706117_in_400x400.jpg" alt="Twilight Shroud"></span><span class="delta cut">−1</span></div><div class="tname">Twilight Shroud</div><div class="setcode">VEN</div><div class="badge owned">OWNED</div></div></div>
+</section>
+
+<h2>Decisions (Josh's call)</h2>
+
+<div class="decision">
+  <h3>Firestorm fallback</h3>
+  <p>Firestorm overdraw (need 4, have 3) — real, narrow, module-dependent. Only manifests if Tantrum's Draven module is sleeved at the same time Butcher of the Sands is also on the table (both draw from the same 3 owned copies otherwise).</p>
+  <ul class="opts"><li>Swap the Draven module's added Firestorm for <b>Smite</b> (UNL Common, Fury/Chaos-legal, owned with 1 real copy of slack) — single-target removal, not the same AOE effect: a real functional downgrade, not a like-for-like swap.</li><li>Or simply don't pilot the Draven module and Butcher of the Sands in the same sitting — costs nothing, loses nothing except flexibility.</li></ul>
+  <div class="nodefault">No default is set on this page — Josh picks at build time.</div>
+</div>
+<div class="decision">
+  <h3>War Council displacement</h3>
+  <p>War Council has zero displacement cards — the last untouched charter deficit from before this pass.</p>
+  <ul class="opts"><li>Accept it as a zero-displacement design (it's an Empower-chain deck, not a bounce deck — may simply be an honest identity).</li><li>Fund a real purchase for Body/Order/Colorless displacement material.</li><li>Authorize a broader card search than this pass's budget allowed.</li></ul>
+  <div class="nodefault">No default is set on this page — Josh picks at build time.</div>
+</div>
+<div class="decision">
+  <h3>Tornado Warrior overdraw / VEN box count</h3>
+  <p>Need 9, have 7 — 100% inherited from V2.3, not introduced by this pass. Bloodharbor's main (3) + Heart of the Tempest's main (3) + Soul's Reflection's Teemo module (3) = 9 copies of Tornado Warrior (VEN, ven-099-166) demanded against 7 owned. Likely covered by Josh's extra VEN boxes — but that box count is itself unverified (sourced only from a message paraphrased as “i think, like, two more boxes of vendetta,” not a scan).</p>
+  <ul class="opts"><li>Confirm the VEN box count — if it covers the 2-copy gap, this resolves itself.</li><li>If it doesn't reconcile, one of the three decks needs a targeted fallback swap (same pattern as the Firestorm/Smite swap, not yet chosen).</li><li>Treat as accepted debt until a future scan.</li></ul>
+  <div class="nodefault">No default is set on this page — Josh picks at build time.</div>
+</div>
+
+<h2>Unchanged (KEEP, 15)</h2>
+<ul class="keep"><li>VANGUARD OF DEMACIA <span class="klegend">— Garen, Might of Demacia</span></li><li>SHADOW LEGION <span class="klegend">— Zed, Master of Shadows</span></li><li>BUTCHER OF THE SANDS <span class="klegend">— Renekton, Butcher of the Sands</span></li><li>THE PILGRIMAGE <span class="klegend">— Master Yi, Wuju Master</span></li><li>FRIEND TO ALL <span class="klegend">— Ivern, Green Father</span></li><li>THE CURATOR&#x27;S HOARD <span class="klegend">— Nasus, Curator of the Sands</span></li><li>SOUL&#x27;S REFLECTION <sup>&dagger;</sup> <span class="klegend">— Mel, Soul&#x27;s Reflection</span></li><li>THE GLOOM <span class="klegend">— Vex, Gloomist</span></li><li>THE WAR COUNCIL <span class="klegend">— Ambessa, Matriarch of War</span></li><li>KEEPER OF THE HAMMER <span class="klegend">— Poppy, Keeper of the Hammer</span></li><li>THE TANTRUM <span class="klegend">— Annie, Dark Child</span></li><li>THE TWILIGHT WATCH <sup>&Dagger;</sup> <span class="klegend">— Shen, Eye of Twilight</span></li><li>THE PRIDESTALKER <span class="klegend">— Rengar, Pridestalker</span></li><li>THE WUJU BLADESMAN <span class="klegend">— Master Yi, Wuju Bladesman</span></li><li>HEART OF THE TEMPEST <sup>&dagger;</sup> <span class="klegend">— Heart of the Tempest</span></li></ul>
+<div class="footnotes">
+&dagger; Heart of the Tempest and Soul's Reflection's cards don't change here, but both are exposed to
+the Tornado Warrior overdraw above &mdash; not fully inert until that decision resolves.<br>
+&Dagger; The Twilight Watch's default 40 is unchanged; see the optional Azir module section above (9)
+for the champion-swap resleeve.
+</div>
+
+<footer>Generated by make_v3_sheet.py from decks_v3.json (frozen) &middot; never hand-edit this file</footer>
+</div>
+<button id="printbtn" onclick="window.print()">Print / Save PDF</button>
+</html>
